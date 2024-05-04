@@ -1,0 +1,75 @@
+/*
+COURSE: CPCS-302
+SECTION: CS3
+GROUP PROJECT PART 3 (JavaCC)
+STUDENTS:
+    Faisal Alragheeb    2136580
+    Abdullah Alharbi    2136600
+    Faisal Balkhair     2136412
+ */
+
+options
+{
+  static = true;
+}
+
+PARSER_BEGIN(calculator)
+package Calculator;
+import java.io.PrintStream;
+
+public class calculator
+{
+  public static void main(String args []) throws ParseException
+  {
+	while(true) {
+	    //print message and create the parser then start program
+    	System.out.print("Enter the expression: ");
+    	calculator parser = new calculator(System.in);
+    	parser.Start(System.out);
+	}
+  }
+  //zeroing the value for next use
+  double PreviousValue=0.0;
+}
+
+PARSER_END(calculator)
+
+//creating the tokens
+SKIP : { " " }
+TOKEN : {
+  <EOL : "\n" | "\r" | "\r\n"> 
+| <PLUS : "+"> 
+| <MINUS : "-"> 
+| <TIMES : "*"> 
+| <DIVIDE : "/"> 
+| <OPEN_PAR : "("> 
+| <CLOSE_PAR : ")"> 
+| <NUMBER : <DIGITS> | <DIGITS> "." <DIGITS> | <DIGITS> "." | "." <DIGITS>> 
+| <#DIGITS : (["0" - "9"]) +> }
+
+//Start method to print the final result and determine the end of line and end of file
+void Start(PrintStream print) : { }
+{
+    (previousValue = Expression() < EOL > { print.println(previousValue); })* {  System.exit(0); }
+}
+
+//Expression method to calculate the result of addition and subtraction 
+double Expression() : {double temp; double result; }
+{
+    result = Term() (< PLUS > temp=Term() { result += temp; } | < MINUS > temp=Term() { result -= temp; })*
+    { return result; }
+}
+
+//Term method to calculate the result of multiplication and division 
+double Term() : {double temp; double result; }
+{
+   result = Primary() (< TIMES > temp=Primary() { result *=temp; } | < DIVIDE > temp=Primary() { result /= temp; })*
+   { return result; }
+}
+
+//Primary method checks if the input is number or nested Expression
+double Primary() : {Token token; double rec; }
+{
+    token=< NUMBER > { return Double.parseDouble(token.image); }
+  | < OPEN_PAR > rec=Expression() < CLOSE_PAR > { return rec; }
+}

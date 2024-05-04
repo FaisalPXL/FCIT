@@ -1,0 +1,32 @@
+void main(void)
+{
+	int a=10;
+	int b=20;
+	b = a++;
+	b += 5;
+	b = a--;
+	b - a;
+	b -= a;
+	b *= a;
+	b * a;
+	b /= a;
+	b / a;
+	b %= a;
+	b % a;
+	b < a;
+	b <= a;
+	b > a;
+	b >= a;
+	b == a;
+	b && a;
+	b || a; 
+	b ! a;
+	b != a;
+	float c = 33.24;
+	double arr = new double[22.3, 34, 44.65]
+	String char = 'a';
+	String str = "test";
+	//single line comment 
+	/* multi line comment */|
+}
+
